@@ -1,25 +1,37 @@
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 
-public class NGNL_intake extends SubsystemBase {
+public class NGNL_intake extends SubsystemBase{
+  private final CANSparkMax intakeMotor;
 
-    private final CANSparkMax intakeMotor = 
-        new CANSparkMax(IntakeConstants.IntakeMotor, MotorType.kBrushless);
-    
-    public void runPercentSpeed(double percentSpeed){
-        percentSpeed = -percentSpeed;
-    }    
-    public NGNL_intake(){
-        intakeMotor.restoreFactoryDefaults();
-        intakeMotor.setCANTimeout(250);
-        intakeMotor.setInverted(false);
-        intakeMotor.setSmartCurrentLimit(40);
-        intakeMotor.burnFlash();
-    }
+  public NGNL_intake(int intakeMotorID) {
+    intakeMotor = new CANSparkMax(IntakeConstants.IntakeMotor, CANSparkMax.MotorType.kBrushless);
 
-    
+  }
+
+  // Spins intake motor to intake notes
+  public void intake() {
+    intakeMotor.set(.75);
+  }
+
+  public void outtake() {
+    intakeMotor.set(-0.75);
+  }
+
+  public void stopIntake() {
+    intakeMotor.set(0);
+  }
+
+  @Override
+  public void periodic() {
+
+  }
+
+  public void stop() {
+    intakeMotor.stopMotor();
+  }
+
 }

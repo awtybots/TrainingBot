@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -18,12 +19,16 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.intakecommands;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.NGNL_intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,6 +37,7 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    private final NGNL_intake intake = new NGNL_intake(4);
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
@@ -57,7 +63,10 @@ public class RobotContainer {
                 true, true),
             m_robotDrive));
   }
-
+  private void nameCommands(){
+    NamedCommands.registerCommand("IntakeCommand", new intakecommands(intake));
+    //NamedCommands.registerCommand("OuttakeCommand", new OuttakeCommand(intake));
+  }
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -72,6 +81,8 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+            
+    m_driverController.getLeftBumper().whileTrue(new IntakeCommand());
   }
 
   /**
