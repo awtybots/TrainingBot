@@ -43,7 +43,9 @@ public class RobotContainer {
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private final XboxController xboxController = new XboxController(1);
 
+  private final intakecommands intakeCommand = new intakecommands(intake);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -77,12 +79,7 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
-            
-    m_driverController.getLeftBumper().whileTrue(new IntakeCommand());
+    new JoystickButton(xboxController, XboxController.Button.kA.value).whileTrue(intakeCommand);
   }
 
   /**
