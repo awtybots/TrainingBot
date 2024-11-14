@@ -19,7 +19,10 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AmpCommand;
+import frc.robot.commands.AmpOuttake;
 import frc.robot.commands.intakecommands;
+import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.NGNL_intake;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -39,6 +42,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 public class RobotContainer {
     private final NGNL_intake intake = new NGNL_intake(4);
   // The robot's subsystems
+  private final Amp amp = new Amp(3);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
 
   // The driver's controller
@@ -46,6 +50,8 @@ public class RobotContainer {
   private final XboxController xboxController = new XboxController(1);
 
   private final intakecommands intakeCommand = new intakecommands(intake);
+  private final AmpCommand ampCommand = new AmpCommand(amp);
+  private final AmpOuttake ampOuttake = new AmpOuttake(amp);
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -79,7 +85,9 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(xboxController, XboxController.Button.kA.value).whileTrue(intakeCommand);
+    new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value).whileTrue(intakeCommand);
+    new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value).whileTrue(ampCommand);
+    new JoystickButton(xboxController, XboxController.Button.kRightBumper.value).whileTrue(ampOuttake);
   }
 
   /**
