@@ -19,12 +19,16 @@ import edu.wpi.first.wpilibj.PS4Controller.Button;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AmpCommand;
+import frc.robot.commands.*;
+/*import frc.robot.commands.AmpCommand;
 import frc.robot.commands.AmpOuttake;
 import frc.robot.commands.intakecommands;
 import frc.robot.commands.outtakecommands;
+import frc.robot.commands.ElevatorDown;
+import frc.robot.commands.ElevatorUp;*/
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Elevator;
 import frc.robot.subsystems.NGNL_intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -46,6 +50,7 @@ public class RobotContainer {
   // The robot's subsystems
   private final Amp amp = new Amp(3);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Elevator elevator = new Elevator(11);
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -56,6 +61,9 @@ public class RobotContainer {
 
   private final AmpCommand ampCommand = new AmpCommand(amp);
   private final AmpOuttake ampOuttake = new AmpOuttake(amp);
+
+  private final ElevatorDown down = new ElevatorDown(elevator);
+  private final ElevatorUp up = new ElevatorUp(elevator);
   
 
   /**
@@ -91,11 +99,12 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(xboxController, XboxController.Button.kA.value).whileTrue(intakeCommand);
     new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value).whileTrue(intakeCommand);
     new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value).whileTrue(ampCommand);
     new JoystickButton(xboxController, XboxController.Button.kRightBumper.value).whileTrue(ampOuttake);
     new JoystickButton(xboxController, XboxController.Button.kRightBumper.value).whileTrue(outtakecommands); 
+    new JoystickButton(xboxController, XboxController.Button.kA.value).whileTrue(down);
+    new JoystickButton(xboxController, XboxController.Button.kY.value).whileTrue(up);
   }
 
   /**
