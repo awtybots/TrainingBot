@@ -14,11 +14,11 @@ public class Elevator extends SubsystemBase{
 
   // Spins intake motor to intake notes
   public void up() {
-    ElevatorMotor.set(.50);
+    ElevatorMotor.set(1);
   }
 
   public void down() {
-    ElevatorMotor.set(-0.50);
+    ElevatorMotor.set(-1);
   }
 
   public void hold() {
