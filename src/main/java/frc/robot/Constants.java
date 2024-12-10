@@ -66,11 +66,15 @@ public final class Constants {
   }
 
   public static final class IntakeConstants{
-    public static final int IntakeMotor = 4;
+    public static final int IntakeMotor = 14;
   }
 
   public static final class AmpConstants{
-    public static final int AmpMotor = 3;
+    public static final int AmpMotor = 13;
+  }
+
+  public static final class ElevatorConstants{
+    public static final int ElevatorMotor = 12;
   }
 
   public static final class ModuleConstants {
