@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -53,7 +54,7 @@ public class RobotContainer {
   private final Elevator elevator = new Elevator(11);
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   private final XboxController xboxController = new XboxController(1);
 
   private final intakecommands intakeCommand = new intakecommands(intake);
@@ -64,6 +65,8 @@ public class RobotContainer {
 
   private final ElevatorDown down = new ElevatorDown(elevator);
   private final ElevatorUp up = new ElevatorUp(elevator);
+
+  private final zeroGyro reset = new zeroGyro(m_robotDrive);
   
 
   /**
@@ -105,6 +108,7 @@ public class RobotContainer {
     new JoystickButton(xboxController, XboxController.Button.kRightBumper.value).whileTrue(outtakecommands); 
     new JoystickButton(xboxController, XboxController.Button.kA.value).whileTrue(down);
     new JoystickButton(xboxController, XboxController.Button.kY.value).whileTrue(up);
+    new JoystickButton(m_driverController, XboxController.Button.kY.value).whileTrue(reset);
   }
 
   /**
