@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,15 +16,28 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.*;
+/*import frc.robot.commands.AmpCommand;
+import frc.robot.commands.AmpOuttake;
+import frc.robot.commands.intakecommands;
+import frc.robot.commands.outtakecommands;
+import frc.robot.commands.ElevatorDown;
+import frc.robot.commands.ElevatorUp;*/
+import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.NGNL_intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.List;
+
+import com.pathplanner.lib.auto.NamedCommands;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -32,11 +46,28 @@ import java.util.List;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    private final NGNL_intake intake = new NGNL_intake(4);
+    
   // The robot's subsystems
+  private final Amp amp = new Amp(3);
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  private final Elevator elevator = new Elevator(11);
 
   // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private final XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+  private final XboxController xboxController = new XboxController(1);
+
+  private final intakecommands intakeCommand = new intakecommands(intake);
+  private final outtakecommands outtakecommands = new outtakecommands(intake);
+
+  private final AmpCommand ampCommand = new AmpCommand(amp);
+  private final AmpOuttake ampOuttake = new AmpOuttake(amp);
+
+  private final ElevatorDown down = new ElevatorDown(elevator);
+  private final ElevatorUp up = new ElevatorUp(elevator);
+
+  private final zeroGyro reset = new zeroGyro(m_robotDrive);
+  
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -57,7 +88,10 @@ public class RobotContainer {
                 true, true),
             m_robotDrive));
   }
-
+  private void nameCommands(){
+    NamedCommands.registerCommand("IntakeCommand", new intakecommands(intake));
+    //NamedCommands.registerCommand("OuttakeCommand", new OuttakeCommand(intake));
+  }
   /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by
@@ -68,10 +102,13 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_driverController, Button.kR1.value)
-        .whileTrue(new RunCommand(
-            () -> m_robotDrive.setX(),
-            m_robotDrive));
+    new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value).whileTrue(intakeCommand);
+    new JoystickButton(xboxController, XboxController.Button.kLeftBumper.value).whileTrue(ampCommand);
+    new JoystickButton(xboxController, XboxController.Button.kRightBumper.value).whileTrue(ampOuttake);
+    new JoystickButton(xboxController, XboxController.Button.kRightBumper.value).whileTrue(outtakecommands); 
+    new JoystickButton(xboxController, XboxController.Button.kA.value).whileTrue(down);
+    new JoystickButton(xboxController, XboxController.Button.kY.value).whileTrue(up);
+    new JoystickButton(m_driverController, XboxController.Button.kY.value).whileTrue(reset);
   }
 
   /**
